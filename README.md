@@ -3,7 +3,7 @@
 This crate contains a helper binary to parse the JEP106 code definitions from the PDF provided by the JEDEC association.
 
 If you want to get the manufacturer name from a JEP106 code, use the [jep106](https://crates.io/crates/jep106) crate,
-which used the parsed definitions from this crate.
+which uses the parsed definitions from this crate.
 
 ## License
 
