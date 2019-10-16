@@ -1,22 +1,9 @@
-# jep106
+# jep106 Parser
 
-[![crates.io](http://meritbadge.herokuapp.com/jep106)](https://crates.io/crates/jep106)
+This crate contains a helper binary to parse the JEP106 code definitions from the PDF provided by the JEDEC association.
 
-[![documentation](https://docs.rs/jep106/badge.svg)](https://docs.rs/jep106)
-
-[![Build Status](https://www.travis-ci.com/Yatekii/jep106.svg)](https://www.travis-ci.com/Yatekii/jep106)
-
-This crate provides a means to retrieve the JEDEC manufacturer string for a corresponding JEP106 ID Code.
-
-All the codes can be found on the page of the JEDEC organization but are presented in the riddiculous form of a PDF. This crate parses the PDF and exposes an interface to poll the JEDEC manufacturer string of a JEP106 ID code.
-
-## Status
-
-The crate provides the JEP106AY Revision of the codes list which was published in February 2019.
-
-## Usage
-
-See [docs](https://docs.rs/jep106/).
+If you want to get the manufacturer name from a JEP106 code, use the [jep106](https://crates.io/crates/jep106) crate,
+which used the parsed definitions from this crate.
 
 ## License
 
