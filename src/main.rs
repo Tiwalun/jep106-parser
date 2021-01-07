@@ -2,36 +2,42 @@ use std::env;
 use std::fs::File;
 use std::io::Write;
 
+use anyhow::{Context, Result};
 use clap::{App, Arg};
 
-fn main() {
+fn main() -> Result<()> {
     let matches = App::new("jep106-build")
         .arg(
             Arg::with_name("pdf")
                 .long("pdf")
                 .takes_value(true)
-                .value_name("PDF"),
+                .value_name("PDF")
+                .required(true),
         )
         .arg(
             Arg::with_name("version")
                 .long("jep_version")
                 .takes_value(true)
-                .value_name("VERSION"),
+                .value_name("VERSION")
+                .required(true),
         )
         .version(env!("CARGO_PKG_VERSION"))
         .get_matches();
 
     let dest_path = "codes.rs";
 
-    let mut f = File::create(&dest_path).unwrap();
+    let mut f = File::create(&dest_path)?;
 
     let version = matches
         .value_of("version")
-        .expect("Missing parameter: --jep_version");
+        .expect("Required argument, should be checked by clap");
 
-    let contents =
-        pdf_extract::extract_text(matches.value_of("pdf").expect("Missing parameter: --pdf"))
-            .expect("Something went wrong reading the file");
+    let pdf_path = matches
+        .value_of("pdf")
+        .expect("Required argument, should be checked by clap");
+
+    let contents = pdf_extract::extract_text(pdf_path)
+        .with_context(|| format!("Failed to extract text from file '{}'", pdf_path))?;
 
     let mut data: Vec<Vec<Option<String>>> = vec![];
 
@@ -70,18 +76,18 @@ fn main() {
 
     let _ = f.write_all(b"];");
 
-    f
-        .write_all(
-            format!(
-                "
+    f.write_all(
+        format!(
+            "
         /// Returns the JEP106 specification version code.
         pub const fn version() -> &'static str {{
             \"{}\"
         }}
     ",
-                version
-            )
-            .as_bytes(),
+            version
         )
-        .unwrap();
+        .as_bytes(),
+    )?;
+
+    Ok(())
 }
