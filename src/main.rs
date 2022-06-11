@@ -3,19 +3,19 @@ use std::fs::File;
 use std::io::Write;
 
 use anyhow::{Context, Result};
-use clap::{App, Arg};
+use clap::{Arg, Command};
 
 fn main() -> Result<()> {
-    let matches = App::new("jep106-build")
+    let matches = Command::new("jep106-build")
         .arg(
-            Arg::with_name("pdf")
+            Arg::new("pdf")
                 .long("pdf")
                 .takes_value(true)
                 .value_name("PDF")
                 .required(true),
         )
         .arg(
-            Arg::with_name("version")
+            Arg::new("version")
                 .long("jep_version")
                 .takes_value(true)
                 .value_name("VERSION")
