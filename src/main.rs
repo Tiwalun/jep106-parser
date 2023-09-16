@@ -1,43 +1,27 @@
-use std::env;
 use std::fs::File;
 use std::io::Write;
+use std::path::PathBuf;
 
 use anyhow::{Context, Result};
-use clap::{Arg, Command};
+use clap::Parser;
+
+#[derive(clap::Parser)]
+struct Opts {
+    #[arg(long, value_name = "PDF")]
+    pdf: PathBuf,
+    #[arg(long = "jep_version", value_name = "VERSION")]
+    jep_version: String,
+}
 
 fn main() -> Result<()> {
-    let matches = Command::new("jep106-build")
-        .arg(
-            Arg::new("pdf")
-                .long("pdf")
-                .takes_value(true)
-                .value_name("PDF")
-                .required(true),
-        )
-        .arg(
-            Arg::new("version")
-                .long("jep_version")
-                .takes_value(true)
-                .value_name("VERSION")
-                .required(true),
-        )
-        .version(env!("CARGO_PKG_VERSION"))
-        .get_matches();
+    let opts = Opts::parse();
 
     let dest_path = "codes.rs";
 
     let mut f = File::create(&dest_path)?;
 
-    let version = matches
-        .value_of("version")
-        .expect("Required argument, should be checked by clap");
-
-    let pdf_path = matches
-        .value_of("pdf")
-        .expect("Required argument, should be checked by clap");
-
-    let contents = pdf_extract::extract_text(pdf_path)
-        .with_context(|| format!("Failed to extract text from file '{}'", pdf_path))?;
+    let contents = pdf_extract::extract_text(&opts.pdf)
+        .with_context(|| format!("Failed to extract text from file '{}'", opts.pdf.display()))?;
 
     let mut data: Vec<Vec<Option<String>>> = vec![];
 
@@ -84,7 +68,7 @@ fn main() -> Result<()> {
             \"{}\"
         }}
     ",
-            version
+            opts.jep_version
         )
         .as_bytes(),
     )?;

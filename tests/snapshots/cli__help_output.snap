@@ -8,15 +8,12 @@ info:
 success: true
 exit_code: 0
 ----- stdout -----
-jep106-build 0.1.0
+Usage: jep106-build --pdf <PDF> --jep_version <VERSION>
 
-USAGE:
-    jep106-build --pdf <PDF> --jep_version <VERSION>
-
-OPTIONS:
-    -h, --help                     Print help information
-        --jep_version <VERSION>    
-        --pdf <PDF>                
+Options:
+      --pdf <PDF>              
+      --jep_version <VERSION>  
+  -h, --help                   Print help
 
 ----- stderr -----
 
