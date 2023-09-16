@@ -1,0 +1,22 @@
+---
+source: tests/cli.rs
+info:
+  program: jep106-build
+  args:
+    - "-h"
+---
+success: true
+exit_code: 0
+----- stdout -----
+jep106-build 0.1.0
+
+USAGE:
+    jep106-build --pdf <PDF> --jep_version <VERSION>
+
+OPTIONS:
+    -h, --help                     Print help information
+        --jep_version <VERSION>    
+        --pdf <PDF>                
+
+----- stderr -----
+
