@@ -14,7 +14,7 @@ license = "MIT OR Apache-2.0"
 pdf-extract = { version = "0.7.2" }
 regex = "1.10.2"
 clap = { version = "4.4", features = ["derive"] }
-anyhow = "1.0.78"
+anyhow = "1.0.79"
 trycmd = "0.14.19"
 
 [dev-dependencies]
