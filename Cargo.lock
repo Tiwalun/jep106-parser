@@ -519,19 +519,26 @@ checksum = "b5e6163cb8c49088c2c36f57875e58ccd8c87c7427f7fbd50ea6710b2f3f2e8f"
 
 [[package]]
 name = "lopdf"
-version = "0.30.0"
+version = "0.32.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7ab029c5cd5b0a292b05e3121b6bcf02f20e58e85ffe6d5417a38c1f8f24cbf7"
+checksum = "e775e4ee264e8a87d50a9efef7b67b4aa988cf94e75630859875fc347e6c872b"
 dependencies = [
  "encoding_rs",
  "flate2",
  "itoa",
  "linked-hash-map",
  "log",
+ "md5",
  "nom",
  "time",
  "weezl",
 ]
+
+[[package]]
+name = "md5"
+version = "0.7.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "490cc448043f947bae3cbee9c203358d62dbee0db12107a74be5c30ccfd09771"
 
 [[package]]
 name = "memchr"
@@ -610,9 +617,9 @@ dependencies = [
 
 [[package]]
 name = "pdf-extract"
-version = "0.7.4"
+version = "0.7.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ad17507d4bcf0d61d53fedd4942cff6beb77dfa9dd4e1c967a2410d82889c0ab"
+checksum = "62ed3fc12e48d18004b44777946b551e57e73471ccc080c35b18bf19e026b543"
 dependencies = [
  "adobe-cmap-parser",
  "encoding",
@@ -801,9 +808,9 @@ checksum = "420acb44afdae038210c99e69aae24109f32f15500aa708e81d46c9f29d55fcf"
 
 [[package]]
 name = "snapbox"
-version = "0.5.1"
+version = "0.5.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "47d9a121ed3297bc4575fa774033a9f1084e0a0c8de8dff416df4eae834121b3"
+checksum = "8ac441e1ecf678f68423d47f376d53fabce1afba92c8f68e31508eb27df8562a"
 dependencies = [
  "anstream",
  "anstyle",
@@ -936,9 +943,9 @@ dependencies = [
 
 [[package]]
 name = "trycmd"
-version = "0.15.0"
+version = "0.15.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "464edb3603a81a50b4c8f47b11dfade69ef48ffdc0af2f8b194ad87cbda75317"
+checksum = "d14c6930faf7c6c4942ce17daa6f38d659d2ebf2b579a56b6926707038eb37b0"
 dependencies = [
  "glob",
  "humantime",

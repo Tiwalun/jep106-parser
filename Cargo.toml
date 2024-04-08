@@ -11,11 +11,11 @@ keywords = ["jep106", "embedded"]
 license = "MIT OR Apache-2.0"
 
 [dependencies]
-pdf-extract = { version = "0.7.4" }
+pdf-extract = { version = "0.7.5" }
 regex = "1.10.4"
 clap = { version = "4.5", features = ["derive"] }
 anyhow = "1.0.81"
-trycmd = "0.15.0"
+trycmd = "0.15.1"
 
 [dev-dependencies]
 insta = { version = "1.38.0", features = ["yaml", "toml"] }
