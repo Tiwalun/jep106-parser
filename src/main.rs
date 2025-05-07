@@ -13,8 +13,8 @@ struct Opts {
     pdf: PathBuf,
     #[arg(long = "jep_version", value_name = "VERSION")]
     jep_version: String,
-    #[arg(long, value_name = "FORMAT")]
-    format: Option<Format>,
+    #[arg(long, value_name = "FORMAT", default_value_t = default::FORMAT)]
+    format: Format,
 }
 
 #[derive(clap::ValueEnum, Clone)]
@@ -23,10 +23,28 @@ enum Format {
     Json,
 }
 
+impl std::fmt::Display for Format {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str(match self {
+            Format::Rust => "rust",
+            Format::Json => "json",
+        })
+    }
+}
+
+mod default {
+    use crate::Format;
+
+    pub const FORMAT: Format = Format::Rust;
+}
+
 fn main() -> Result<()> {
     let opts = Opts::parse();
 
-    let dest_path = "codes.rs";
+    let dest_path = match opts.format {
+        Format::Rust => "codes.rs",
+        Format::Json => "codes.json",
+    };
 
     let f = File::create(dest_path)?;
 
@@ -48,7 +66,7 @@ fn main() -> Result<()> {
         }
     }
 
-    match opts.format.unwrap_or(Format::Rust) {
+    match opts.format {
         Format::Rust => make_rust(f, data, opts.jep_version)?,
         Format::Json => make_json(f, data, opts.jep_version)?,
     }
