@@ -123,11 +123,7 @@ fn make_json(
     for bank in data.into_iter() {
         for manufacturer in bank {
             targets.push(if let Some(manufacturer) = manufacturer {
-                Value::Object({
-                    let mut map = serde_json::Map::new();
-                    map.insert("manufacturer".to_string(), Value::String(manufacturer));
-                    map
-                })
+                Value::String(manufacturer)
             } else {
                 Value::Null
             });
