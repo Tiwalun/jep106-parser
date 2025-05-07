@@ -1,7 +1,10 @@
 [package]
 name = "jep106-build"
 version = "0.1.0"
-authors = ["Noah Huesser <yatekii@yatekii.ch>", "Dominik Boehi <dominik.boehi@gmail.ch>"]
+authors = [
+    "Noah Huesser <yatekii@yatekii.ch>",
+    "Dominik Boehi <dominik.boehi@gmail.ch>",
+]
 edition = "2018"
 description = "Helper tool to extract JEP106 codes from the provided PDF."
 repository = "https://github.com/tiwalun/jep106-parse"
@@ -11,12 +14,13 @@ keywords = ["jep106", "embedded"]
 license = "MIT OR Apache-2.0"
 
 [dependencies]
-pdf-extract = { version = "0.8.2" }
+pdf-extract = { version = "0.9" }
 regex = "1.11.1"
 clap = { version = "4.5", features = ["derive"] }
 anyhow = "1.0.98"
 trycmd = "0.15.9"
+serde_json = "1"
 
 [dev-dependencies]
-insta = { version = "1.41.1", features = ["yaml", "toml"] }
+insta = { version = "1.43", features = ["yaml", "toml"] }
 insta-cmd = "0.6.0"
