@@ -49,7 +49,7 @@ fn main() -> Result<()> {
     let f = File::create(dest_path)?;
 
     let contents = pdf_extract::extract_text(&opts.pdf)
-        .with_context(|| format!("Failed to extract text from file '{}'", opts.pdf.display()))?;
+        .with_context(|| format!("Failed to extract text from file '{}'. Usually errors happen when the PDF has a bad format. Try exporting to PDF/A.", opts.pdf.display()))?;
 
     let mut data: Vec<Vec<Option<String>>> = vec![];
 
