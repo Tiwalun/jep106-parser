@@ -4,6 +4,8 @@ use std::path::PathBuf;
 
 use anyhow::{Context, Result};
 use clap::Parser;
+use regex::Regex;
+use serde_json::Value;
 
 #[derive(clap::Parser)]
 struct Opts {
@@ -11,6 +13,14 @@ struct Opts {
     pdf: PathBuf,
     #[arg(long = "jep_version", value_name = "VERSION")]
     jep_version: String,
+    #[arg(long, value_name = "FORMAT")]
+    format: Option<Format>,
+}
+
+#[derive(clap::ValueEnum, Clone)]
+enum Format {
+    Rust,
+    Json,
 }
 
 fn main() -> Result<()> {
@@ -18,16 +28,16 @@ fn main() -> Result<()> {
 
     let dest_path = "codes.rs";
 
-    let mut f = File::create(&dest_path)?;
+    let f = File::create(dest_path)?;
 
     let contents = pdf_extract::extract_text(&opts.pdf)
         .with_context(|| format!("Failed to extract text from file '{}'", opts.pdf.display()))?;
 
     let mut data: Vec<Vec<Option<String>>> = vec![];
 
+    let re = Regex::new(r"^[0-9]+\s+(.*?)\s+([01]\s+){8}([0-9A-F]{2})\s+$").unwrap();
+
     for line in contents.lines() {
-        use regex::Regex;
-        let re = Regex::new(r"^[0-9]+\s+(.*?)\s+([01]\s+){8}([0-9A-F]{2})\s+$").unwrap();
         if let Some(capture) = re.captures(line) {
             if &capture[3] == "01" {
                 data.push(vec![None; 256]);
@@ -38,6 +48,19 @@ fn main() -> Result<()> {
         }
     }
 
+    match opts.format.unwrap_or(Format::Rust) {
+        Format::Rust => make_rust(f, data, opts.jep_version)?,
+        Format::Json => make_json(f, data, opts.jep_version)?,
+    }
+
+    Ok(())
+}
+
+fn make_rust(
+    mut f: File,
+    data: Vec<Vec<Option<String>>>,
+    jep_version: String,
+) -> Result<(), anyhow::Error> {
     let _ = f.write_all(
         format!(
             "pub(crate) const CODES: [[Option<&'static str>; 256]; {}] = [",
@@ -45,7 +68,6 @@ fn main() -> Result<()> {
         )
         .as_bytes(),
     );
-
     for bank in data.iter() {
         let _ = f.write(b"[");
         for company in bank {
@@ -57,9 +79,7 @@ fn main() -> Result<()> {
         }
         let _ = f.write_all(b"],");
     }
-
     let _ = f.write_all(b"];");
-
     f.write_all(
         format!(
             "
@@ -68,10 +88,41 @@ fn main() -> Result<()> {
             \"{}\"
         }}
     ",
-            opts.jep_version
+            jep_version
         )
         .as_bytes(),
     )?;
+    Ok(())
+}
 
+fn make_json(
+    f: File,
+    data: Vec<Vec<Option<String>>>,
+    jep_version: String,
+) -> Result<(), anyhow::Error> {
+    let mut targets = vec![];
+
+    for bank in data.into_iter() {
+        for manufacturer in bank {
+            targets.push(if let Some(manufacturer) = manufacturer {
+                Value::Object({
+                    let mut map = serde_json::Map::new();
+                    map.insert("manufacturer".to_string(), Value::String(manufacturer));
+                    map
+                })
+            } else {
+                Value::Null
+            });
+        }
+    }
+
+    let data = Value::Object({
+        let mut map = serde_json::Map::new();
+        map.insert("version".to_string(), Value::String(jep_version));
+        map.insert("targets".to_string(), Value::Array(targets));
+        map
+    });
+
+    serde_json::to_writer_pretty(f, &data)?;
     Ok(())
 }
