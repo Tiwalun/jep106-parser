@@ -118,11 +118,11 @@ fn make_json(
     data: Vec<Vec<Option<String>>>,
     jep_version: String,
 ) -> Result<(), anyhow::Error> {
-    let mut targets = vec![];
+    let mut manufacturers = vec![];
 
     for bank in data.into_iter() {
         for manufacturer in bank {
-            targets.push(if let Some(manufacturer) = manufacturer {
+            manufacturers.push(if let Some(manufacturer) = manufacturer {
                 Value::String(manufacturer)
             } else {
                 Value::Null
@@ -133,7 +133,7 @@ fn make_json(
     let data = Value::Object({
         let mut map = serde_json::Map::new();
         map.insert("version".to_string(), Value::String(jep_version));
-        map.insert("targets".to_string(), Value::Array(targets));
+        map.insert("manufacturers".to_string(), Value::Array(manufacturers));
         map
     });
 
