@@ -12,10 +12,10 @@ license = "MIT OR Apache-2.0"
 
 [dependencies]
 pdf-extract = { version = "0.8.2" }
-regex = "1.11.1"
+regex = "1.11.2"
 clap = { version = "4.5", features = ["derive"] }
-anyhow = "1.0.98"
-trycmd = "0.15.9"
+anyhow = "1.0.99"
+trycmd = "0.15.10"
 
 [dev-dependencies]
 insta = { version = "1.41.1", features = ["yaml", "toml"] }
