@@ -40,7 +40,7 @@ fn main() -> Result<()> {
 
     let _ = f.write_all(
         format!(
-            "pub(crate) const CODES: [[Option<&'static str>; 256]; {}] = [",
+            "pub(crate) static CODES: [[Option<&'static str>; 256]; {}] = [",
             data.len()
         )
         .as_bytes(),
