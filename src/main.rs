@@ -4,6 +4,7 @@ use std::path::PathBuf;
 
 use anyhow::{Context, Result};
 use clap::Parser;
+use regex::Regex;
 
 #[derive(clap::Parser)]
 struct Opts {
@@ -18,16 +19,15 @@ fn main() -> Result<()> {
 
     let dest_path = "codes.rs";
 
-    let mut f = File::create(&dest_path)?;
+    let mut f = File::create(dest_path)?;
 
     let contents = pdf_extract::extract_text(&opts.pdf)
         .with_context(|| format!("Failed to extract text from file '{}'", opts.pdf.display()))?;
 
     let mut data: Vec<Vec<Option<String>>> = vec![];
+    let re = Regex::new(r"^[0-9]+\s+(.*?)\s+([01]\s+){8}([0-9A-F]{2})\s+$").unwrap();
 
     for line in contents.lines() {
-        use regex::Regex;
-        let re = Regex::new(r"^[0-9]+\s+(.*?)\s+([01]\s+){8}([0-9A-F]{2})\s+$").unwrap();
         if let Some(capture) = re.captures(line) {
             if &capture[3] == "01" {
                 data.push(vec![None; 256]);
@@ -40,7 +40,7 @@ fn main() -> Result<()> {
 
     let _ = f.write_all(
         format!(
-            "pub(crate) const CODES: [[Option<&'static str>; 256]; {}] = [",
+            "pub(crate) static CODES: [[Option<&'static str>; 256]; {}] = [",
             data.len()
         )
         .as_bytes(),
